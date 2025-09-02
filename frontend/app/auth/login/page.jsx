@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-
 const LoginPage = () => {
   const router = useRouter();
 
@@ -13,7 +12,6 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState({ text: "", type: "" });
   const [loading, setLoading] = useState(false);
-
 
   useEffect(() => {
     if (!message || !message.text) return;
@@ -58,17 +56,31 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center">
+    <div className="relative min-h-screen flex items-center justify-center bg-[#0f2b29] overflow-hidden">
+      {/* Background circles for glassmorphism effect */}
+      <div className="absolute -left-20 top-1/3 h-72 w-72 rounded-full bg-[#77e6da] opacity-40 blur-3xl"></div>
+      <div className="absolute -right-10 top-1/4 h-60 w-60 rounded-full bg-[#a3ffd6] opacity-30 blur-2xl"></div>
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-80 w-80 rounded-full bg-[#245e56] opacity-50 blur-3xl"></div>
+
       {message && message.text && (
-        <p className={`border absolute top-0 flex justify-center items-center gap-3 p-2 text-center rounded-xl text-sm mt-4 ${message.type === "error" ? "text-red-200 bg-red-300/50" : "text-green-200 bg-green-300/50"}`}>
-          <Info className="text-red-50" size={25} strokeWidth={1.5} />
+        <p
+          className={`border absolute top-5 flex justify-center items-center gap-3 p-3 text-center rounded-xl text-sm z-20 shadow-lg ${
+            message.type === "error"
+              ? "text-red-200 bg-red-300/50 backdrop-blur-md"
+              : "text-green-200 bg-green-300/50 backdrop-blur-md"
+          }`}
+        >
+          <Info className="text-white" size={20} strokeWidth={1.5} />
           {message.text}
         </p>
       )}
-      <div className="bg-neutral-700 p-8 rounded shadow-md w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+
+      {/* Glass card */}
+      <div className="relative bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-xl w-full max-w-sm border border-white/20 z-10">
+        <h2 className="text-3xl font-bold mb-6 text-center text-white">Login</h2>
+
         <form
-          className="flex flex-col gap-5 items-center justify-center"
+          className="flex flex-col gap-5"
           onSubmit={handleSubmit}
           method="POST"
           onKeyDown={(e) => {
@@ -82,7 +94,7 @@ const LoginPage = () => {
             type="email"
             name="email"
             placeholder="Email"
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full px-4 py-2 rounded-lg bg-white/20 text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-cyan-300"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -91,27 +103,25 @@ const LoginPage = () => {
             type="password"
             name="password"
             placeholder="Password"
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full px-4 py-2 rounded-lg bg-white/20 text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-cyan-300"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
           <button
             type="submit"
-            className="flex items-center justify-center w-full bg-blue-600 text-white py-2 rounded disabled:opacity-50 hover:bg-blue-700 transition"
+            className="flex items-center justify-center w-full bg-cyan-500 text-white py-2 rounded-lg font-medium hover:bg-cyan-600 transition disabled:opacity-50"
             disabled={loading}
           >
             {loading ? "Logging In..." : "Login"}
-            <span className='ml-3 animate-spin'>{loading && <Loader />}</span>
+            <span className="ml-3 animate-spin">{loading && <Loader />}</span>
           </button>
-          <button className="w-full" disabled={loading}>
-            <Link
-              href="/auth/signup"
-              className="block text-center w-full bg-blue-400 text-white py-2 rounded hover:bg-blue-600 transition"
-            >
-              Sign Up
-            </Link>
-          </button>
+          <Link
+            href="/auth/signup"
+            className="block text-center w-full bg-white/20 text-white py-2 rounded-lg hover:bg-white/30 transition"
+          >
+            Sign Up
+          </Link>
         </form>
       </div>
     </div>
