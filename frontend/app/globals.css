@@ -1,26 +1,159 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+	--background: #ffffff;
+	--foreground: #171717;
+	--linear-background: linear-gradient(to bottom,
+			hsl(175, 50%, 20%),
+			hsl(175, 50%, 15%),
+			hsl(175, 50%, 10%))
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--font-sans: var(--font-geist-sans);
+	--font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+	:root {
+		--background: #0a0a0a;
+		--foreground: #ededed;
+	}
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+	background: var(--linear-background);
+	color: var(--foreground);
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.voice-assistant {
+	position: relative;
+	border-radius: 50%;
+	background:
+		radial-gradient(circle at 20% 40%, rgba(135, 206, 250, 0.8), transparent 60%),
+		radial-gradient(circle at 80% 30%, rgba(147, 112, 219, 0.6), transparent 60%),
+		radial-gradient(circle at 50% 80%, rgba(255, 20, 147, 0.5), transparent 65%),
+		radial-gradient(circle at 30% 70%, rgba(255, 165, 0, 0.7), transparent 55%),
+		radial-gradient(circle at 70% 50%, rgba(0, 191, 255, 0.6), transparent 60%);
+		background-size: 300% 300%;
+		animation: voicePulse 3.5s ease-in-out infinite, gradientFlow 5s linear infinite;
+		box-shadow:
+		0 0 0.6rem rgba(255, 255, 255, 0.25),
+		0 0 1.2rem rgba(147, 112, 219, 0.35),
+		0 0 2.5rem rgba(0, 191, 255, 0.25),
+		inset 0 0 0.8rem rgba(0, 0, 0, 0.6);
+		filter: brightness(1.05) contrast(1.1);
+		transition: all 0.25s ease;
+		
+		&.pause {
+			animation: none;
+			background-size: 100% 100%;
+			
+
+	}
+}
+
+.transparent-bordered-text {
+	position: relative;
+	z-index: 10;
+	color: transparent;
+	-webkit-text-fill-color: transparent;
+	-webkit-text-stroke: .75px hsl(0, 0%, 100%, .5);
+	text-align: center;
+}
+
+@keyframes voicePulse {
+	0% {
+		transform: scale(1);
+		filter: brightness(1) saturate(1);
+		background-position: 50% 50%;
+		box-shadow:
+			0 0 0.6rem rgba(255, 255, 255, 0.2),
+			0 0 1.2rem rgba(147, 112, 219, 0.3),
+			inset 0 0 0.8rem rgba(0, 0, 0, 0.6);
+	}
+
+	10% {
+		transform: scale(1.08);
+		filter: brightness(1.25) saturate(1.3);
+		background-position: 55% 45%;
+	}
+
+	25% {
+		transform: scale(0.97);
+		filter: brightness(1.05) saturate(1.15);
+		background-position: 52% 48%;
+	}
+
+	40% {
+		transform: scale(1.1);
+		filter: brightness(1.3) saturate(1.4);
+		background-position: 48% 55%;
+		box-shadow:
+			0 0 0.9rem rgba(255, 255, 255, 0.3),
+			0 0 2rem rgba(147, 112, 219, 0.4),
+			0 0 3rem rgba(0, 191, 255, 0.3),
+			inset 0 0 0.7rem rgba(0, 0, 0, 0.65);
+	}
+
+	60% {
+		transform: scale(0.93);
+		filter: brightness(1) saturate(1.1);
+		background-position: 50% 52%;
+	}
+
+	80% {
+		transform: scale(1.05);
+		filter: brightness(1.2) saturate(1.25);
+		background-position: 47% 48%;
+	}
+
+	100% {
+		transform: scale(1);
+		filter: brightness(1.05) saturate(1.1);
+		background-position: 50% 50%;
+	}
+}
+
+@keyframes gradientFlow {
+	0% {
+		background-position: 0% 50%;
+	}
+
+	25% {
+		background-position: 50% 30%;
+	}
+
+	50% {
+		background-position: 100% 50%;
+	}
+
+	75% {
+		background-position: 50% 70%;
+	}
+
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+/* In your CSS file or a <style> block */
+.custom-scrollbar::-webkit-scrollbar {
+	width: 8px;
+	/* Adjust this value for your desired width */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+	background-color: #fffc;
+	/* Example track color */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+	background-color: #888;
+	/* Example thumb color */
+	border-radius: 4px;
+	/* Example thumb roundness */
 }
