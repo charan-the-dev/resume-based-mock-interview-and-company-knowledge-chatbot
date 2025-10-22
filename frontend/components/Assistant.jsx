@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Sidebar() {
+export default function Assistant() {
     const assistantName = "MILO";
     const [isPaused, setPaused] = useState(true);
 
