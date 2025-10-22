@@ -1,9 +1,6 @@
-import React from 'react'
 
-const page = () => {
-  return (
-    <div>this is the first page</div>
-  )
+export default function page() {
+    return (
+        <div>move to <code className="bg-black text-white">/auth/sign-in</code> or <code className="bg-black text-white">/auth/sign-up</code></div>
+    )
 }
-
-export default page
