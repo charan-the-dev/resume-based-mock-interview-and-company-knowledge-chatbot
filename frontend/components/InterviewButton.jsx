@@ -7,7 +7,7 @@ const InterviewButton = () => {
     const router = useRouter();
     return (
         <button
-            className='py-2 px-5 rounded bg-emerald-200 border-2 border-emerald-700 cursor-pointer'
+            className='py-2 px-5 rounded bg-orange-200/30 border-2 border-orange-400 cursor-pointer'
             type="button"
             onClick={() => router.push("/interview/new")}
         >

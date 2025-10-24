@@ -2,11 +2,16 @@
 
 import { useState } from "react";
 import Toast from "@/components/Toast";
-import { generateQuestions } from "@/lib/actions/interviewGeneration";
+import { generateQuestions } from "@/lib/actions/llm";
+import { createInterview } from "@/lib/actions/interview.action";
+import { useRouter } from "next/navigation";
 
 const MIN_QUESTIONS = 2;
 
 export default function InterviewForm() {
+
+    const router = useRouter();
+
     const [difficulty, setDifficulty] = useState("");
     const [type, setType] = useState("");
     const [experience, setExperience] = useState("");
@@ -29,20 +34,23 @@ export default function InterviewForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setMessage({text: "", type: "warning"});
+        setMessage({ text: "", type: "warning" });
 
         if (!difficulty || !type || !experience) {
-            setMessage({text: "Please fill all required fields.", type: "error"});
+            setLoading(false);
+            setMessage({ text: "Please fill all required fields.", type: "error" });
             return;
         }
 
         if (techStack.length === 0) {
-            setMessage({text: "Please add at least one tech stack.", type: "error"});
+            setLoading(false);
+            setMessage({ text: "Please add at least one tech stack.", type: "error" });
             return;
         }
 
         if (isNaN(Number(noOfQuestions)) || Number(noOfQuestions) < MIN_QUESTIONS) {
-            setMessage({text: `Number of questions should be at least ${MIN_QUESTIONS}.`, type: "error"});
+            setLoading(false);
+            setMessage({ text: `Number of questions should be at least ${MIN_QUESTIONS}.`, type: "error" });
             return;
         }
 
@@ -51,19 +59,32 @@ export default function InterviewForm() {
             type,
             experience,
             techStack,
-            noOfQuestions,
+            noOfQuestions: Number(noOfQuestions),
         };
 
         setLoading(true);
 
-        const res = await generateQuestions(interviewFormData);
-        if (res.success) {
-            setMessage({ text: "Form submitted successfully!", type: "success" });
+        const LLMRes = await generateQuestions(interviewFormData);
+
+        if (!LLMRes.success || !LLMRes.questions) {
             setLoading(false);
-        } else {
-            setMessage({ text: "There was an error Generating the interview. Please try again later!"})
+            setMessage({ text: LLMRes.message, type: "error" });
+            return;
         }
 
+        const questions = LLMRes?.questions;
+
+        const res = await createInterview({ ...interviewFormData, questions });
+
+        if (!res.success) {
+            setMessage({ text: res.message, type: "error" });
+            return;
+        }
+
+
+        setMessage({ text: res.message, type: "success" });
+        setLoading(false);
+        router.push("/dashboard")
     };
 
     return (
@@ -146,7 +167,7 @@ export default function InterviewForm() {
                         {techStack.map((tech) => (
                             <div
                                 key={tech}
-                                className="flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-700 text-white text-sm"
+                                className="flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-700 text-sm"
                             >
                                 <span>{tech}</span>
                                 <button
@@ -179,8 +200,8 @@ export default function InterviewForm() {
 
                 <button
                     type="submit"
-                    className="w-full py-2 rounded-lg bg-sky-300 hover:bg-sky-500 font-semibold"
-                    disabled={loading && !error}
+                    className="w-full py-2 rounded-lg bg-sky-300 hover:bg-sky-500 font-semibold disabled:bg-pink-300"
+                    disabled={loading}
                 >
                     {
                         loading ? "Generating,,," : "Generate Interview"

@@ -1,7 +1,9 @@
 import InterviewButton from "@/components/InterviewButton";
+import Interviews from "@/components/ui/interview/Interviews";
 import ResumeButton from "@/components/ResumeButton";
 
 export default function page() {
+
     return (
         <div>
             <div className="text-center text-3xl font-bold">
@@ -11,6 +13,8 @@ export default function page() {
                 <InterviewButton />
                 <ResumeButton />
             </div>
+            {/* Interviews */}
+            <Interviews />
         </div>
     )
 }
