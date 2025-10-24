@@ -1,6 +1,13 @@
-import LogoutButton from "./components/LogoutButton"
+import { isAuthenticated } from "@/lib/actions/auth.action"
+import LogoutButton from "../components/LogoutButton"
+import { redirect } from "next/navigation"
 
-export default function page() {
+export default async function page() {
+  const isUserAuthenticated = await isAuthenticated();
+  
+  if (!isUserAuthenticated) {
+    redirect("/auth/sign-in");
+  }
 
   return (
     <>

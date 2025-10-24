@@ -4,15 +4,16 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { faInfo, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebase/client";
 import { signup } from "@/lib/actions/auth.action";
+import Toast from "@/components/Toast";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const [message, setMessage] = useState({ text: "", type: "" });
   const [loading, setLoading] = useState(false);
 
@@ -66,17 +67,7 @@ const Signup = () => {
   return (
     <main className="relative flex flex-col items-center justify-center min-h-screen min-w-screen">
       {/* Notification message */}
-      {message.text && (
-        <p
-          className={`border absolute top-4 flex gap-2 justify-center items-center p-2 text-center rounded-xl text-sm ${message.type === "error"
-              ? "text-red-200 bg-red-300/50"
-              : "text-green-200 bg-green-300/50"
-            }`}
-        >
-          <FontAwesomeIcon icon={faInfo} />
-          {message.text}
-        </p>
-      )}
+      <Toast message={message.text} setMessage={setMessage} type={message.type} />
 
       {/* Signup form */}
       <form
@@ -103,7 +94,7 @@ const Signup = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
+        
         <button
           className="bg-black/50 p-2 px-5 mt-10 rounded-lg text-white cursor-pointer hover:text-black hover:bg-white/60 transition-colors duration-700"
           type="submit"
