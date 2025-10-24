@@ -1,19 +1,23 @@
 import { NextResponse } from "next/server";
-import { jwtVerify } from "jose";
 
-const COOKIE_NAME = "session_token";
+export async function middleware(request) {
+    const session = request.cookies.get("session")?.value;
 
-export default async function middleware(req) {
-    const token = req.cookies.get(COOKIE_NAME)?.value;
-    const { pathname } = req.nextUrl;
-
-    if (!token) {
-        NextResponse.redirect(new URL("/auth/login", req.url));
+    // If no session cookie → redirect to login
+    if (!session) {
+        const url = new URL("/auth/sign-in", request.url);
+        return NextResponse.redirect(url);
     }
 
-    NextResponse.redirect(new URL("/auth/signup", req.url));
+    // Allow access if verified
+    return NextResponse.next();
 }
 
+// Define which routes the middleware applies to
 export const config = {
-    matcher: ["/auth/login", "/auth/signup"]
+    matcher: [
+        "/interview/:path*",
+        "/dashboard/:path*",
+        "/profile/:path*",
+    ],
 };
