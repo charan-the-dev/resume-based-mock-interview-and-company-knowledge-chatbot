@@ -3,19 +3,30 @@
 import { db, auth } from "@/firebase/admin";
 import { cookies } from "next/headers";
 
-const SESSION_DURATION_IN_SECONDS = 60 * 60 * 24 * 7;
+const ONE_WEEK_IN_SECs = 60 * 60 * 24 * 7;
+const ONE_DAY_IN_SECs = 60 * 60 * 24;
+const ONE_HOUR_IN_SECs = 60 * 60;
+
+const SESSION_DURATION = ONE_HOUR_IN_SECs * 3;
+
+const generateRandomUsername = (email) => {
+    const usernameBase = email.split('@')[0];
+    const randomSuffix = Math.random().toString(36).slice(2, 8);
+    return `${usernameBase}_${randomSuffix}`;
+}
+
 
 const setSesstionToken = async (idToken) => {
     const cookieStore = await cookies();
 
     // create session cookie
     const sessionCookie = await auth.createSessionCookie(idToken, {
-        expiresIn: SESSION_DURATION_IN_SECONDS * 1000, // in milliseconds
+        expiresIn: SESSION_DURATION * 1000, // in milliseconds
     });
 
     // set cookie in browser
     cookieStore.set("session", sessionCookie, {
-        maxAge: SESSION_DURATION_IN_SECONDS,
+        maxAge: SESSION_DURATION,
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
     })
@@ -37,7 +48,8 @@ export async function signup(params) {
         // add new user to the database
         await db.collection("users").doc(uid).set({
             email,
-            password
+            password,
+            username: generateRandomUsername(email),
         });
 
         return {
@@ -51,6 +63,13 @@ export async function signup(params) {
             return {
                 success: false,
                 message: "This email already exists",
+            }
+        }
+
+        if (e.code === "auth/invalid-credential") {
+            return {
+                success: false,
+                message: "The entered credentials are incorrect!"
             }
         }
 
@@ -95,7 +114,7 @@ export async function login(params) {
 export const getCurrentUser = async () => {
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get("session")?.value;
-    
+
     if (!sessionCookie) return null;
 
     try {
@@ -114,9 +133,25 @@ export const getCurrentUser = async () => {
     }
 }
 
+export const updateUserDetails = async (userId, updatedDetails) => {
+    const user = await db.collection("users").doc(userId).get();
+    if (!user.exists) {
+        return {
+            success: false,
+            message: "The user does not exist. Please sign up!"
+        }
+    }
+
+    await db.collection("users").doc(userId).set(updatedDetails, { merge: true });
+    return {
+        success: true,
+        message: "User details updated successfully"
+    }
+}
+
 export const isAuthenticated = async () => {
     const user = await getCurrentUser();
-    return !!user; 
+    return !!user;
 }
 
 export async function signout() {
