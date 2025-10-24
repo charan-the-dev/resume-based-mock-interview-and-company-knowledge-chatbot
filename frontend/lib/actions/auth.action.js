@@ -35,10 +35,17 @@ const setSesstionToken = async (idToken) => {
 export async function signup(params) {
     const { uid, email, password } = params;
 
+    console.log(uid, email, password);
+    
+
     try {
         // check if the user already exists 
         const user = await db.collection("users").doc(uid).get();
+        console.log(user);
+        
         if (user.exists) {
+            console.log("There is already an existing user!");
+            
             return {
                 success: false,
                 message: "The user already exists. Please sign in !"
@@ -46,12 +53,15 @@ export async function signup(params) {
         }
 
         // add new user to the database
-        await db.collection("users").doc(uid).set({
+        const res = await db.collection("users").doc(uid).set({
             email,
             password,
             username: generateRandomUsername(email),
         });
 
+        console.log(res);
+        
+        
         return {
             success: true,
             message: "A new User is created. Please sign in to continue"
@@ -96,6 +106,7 @@ export async function login(params) {
         }
 
         await setSesstionToken(idToken);
+
         return {
             success: true,
             message: "User logged in sussessfully"
