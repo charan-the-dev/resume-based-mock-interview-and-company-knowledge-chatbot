@@ -3,7 +3,7 @@
 import Toast from "@/components/Toast";
 import { auth } from "@/firebase/client";
 import { getCurrentUser, login } from "@/lib/actions/auth.action";
-import { faInfo, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
@@ -39,17 +39,17 @@ const LoginPage = () => {
 		try {
 			const userCredential = await signInWithEmailAndPassword(auth, email, password);
 			const idToken = await userCredential.user.getIdToken();
-	
+
 			if (!idToken) {
 				setMessage({ text: "Sign In Failed! Please try again later." });
 				return;
 			}
-	
+
 			const res = await login({ email, idToken });
 
 			if (res.success) {
 				setMessage({text: res.message, type: "success"});
-			}	
+			}
 
 			if (!(await getCurrentUser()).username) {
 				router.push("/details");
@@ -59,7 +59,7 @@ const LoginPage = () => {
 			router.push("/dashboard");
 		} catch (e) {
 			setLoading(false);
-			
+
 			if (e.code === "auth/invalid-credential") {
 				setMessage({text: "The credentials entered are invalid or the user does not exist. Please check and try again!"})
 			}
@@ -71,7 +71,7 @@ const LoginPage = () => {
 		<main className="relative flex flex-col items-center justify-center min-h-screen min-w-screen">
 			{/* Notification message */}
 			<Toast message={message.text} setMessage={setMessage} type={message.type} />
- 
+
 			{/* Signup form */}
 			<form
 				className="min-w-sm p-10 bg-white/10 rounded-xl m-auto flex gap-4 flex-col text-center"

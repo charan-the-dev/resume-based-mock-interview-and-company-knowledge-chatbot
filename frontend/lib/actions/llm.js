@@ -20,15 +20,17 @@ export async function generateQuestions(interviewParams) {
             .replace(/[\u2018\u2019]/g, "'") // replace smart apostrophes
             .trim();
 
+
         return {
             success: true,
-            questions: JSON.parse(cleanedText)
+            questions: JSON.parse(cleanedText),
         };
     } catch (e) {
         console.log("There was an error generating questions", e);
         return {
             success: false,
-            questions: []
+            questions: [],
+            message: "There was an error generating questions. Please try again later!"
         };
     }
 }
