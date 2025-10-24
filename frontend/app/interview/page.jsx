@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import ChatLayout from '../components/ChatLayout';
+import ChatLayout from '../../components/ChatLayout';
 
 const Interview = () => {
     const [messages, setMessages] = useState([
