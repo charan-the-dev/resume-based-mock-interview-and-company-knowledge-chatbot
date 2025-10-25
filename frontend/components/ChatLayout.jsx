@@ -1,11 +1,11 @@
-import ChatArea from "./ChatArea";
-import Assistant from "./Assistant";
+import ChatArea from "@/components/ChatArea";   
+import Assistant from "@/components/Assistant";
 
-export default function ChatLayout({ messages, onSendMessage }) {
+export default function ChatLayout() {
     return (
         <div className="flex h-screen">
             <Assistant />
-            <ChatArea messages={messages} onSendMessage={onSendMessage} />
+            <ChatArea />
         </div>
     );
 };

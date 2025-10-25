@@ -1,28 +1,35 @@
 "use client";
+
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 
-export default function MessageInput(onSend, placeholder = 'Enter your answer here...') {
-    const [text, setText] = useState('');
-    
-    const handleSubmit = (e) => {
+export default function MessageInput({ onSend }) {
+
+    const [message, setMessage] = useState("");
+
+    function handleSend(e) {
         e.preventDefault();
-        if (text.trim()) {
-            onSend(text);
-            setText('');
+        const newMessage = {
+            id: crypto.randomUUID(),
+            text: message,
+            sender: "user",
+            timestamp: new Date().toISOString()
         }
-    };
-    
+        setMessage("");
+
+        onSend(newMessage);
+    }
+
+
     return (
-        <form onSubmit={handleSubmit} className="relative flex gap-5 justify-center items-center w-3/4 m-auto bg-neutral-200/75 rounded-full pr-2 text-gray-800 placeholder-gray-700 ouline-none">
+        <form onSubmit={(e) => handleSend(e)} className="relative flex gap-5 justify-center items-center w-3/4 m-auto bg-neutral-200/75 rounded-full pr-2 text-gray-800 placeholder-gray-700 ouline-none">
             <input
                 className="w-full p-2 px-5 outline-none"
                 type="text"
-                rows={1}
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                placeholder={placeholder}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Type your answer..."
             />
             <button
                 className="cursor-pointer p-2 text-gray-800 hover:text-gray-900 transition-colors"

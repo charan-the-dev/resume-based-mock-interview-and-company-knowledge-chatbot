@@ -3,8 +3,13 @@
 import { db } from "@/firebase/admin";
 
 export async function doesInterviewExist(id) {
+    if (!id) {
+        console.log("Invalid interview ID:", id);
+        return { success: false, interview: null };
+    }
+
     try {
-        const doc = await db.collection("interviews").doc(id).get();
+        const doc = await db.collection("interviews").doc(id || "").get();
         if (doc.exists) {
             return {
                 success: true,
@@ -12,7 +17,7 @@ export async function doesInterviewExist(id) {
             }
         }
     } catch (e) {
-        console.error("Error checking interview existence:", e);
+        console.log("Error checking interview existence:", e);
         return {
             success: false,
             interview: null
@@ -22,12 +27,21 @@ export async function doesInterviewExist(id) {
 
 export async function createInterview(interviewParams) {
     try {
-        const { type, difficulty, experience, techStack, noOfQuestions, questions } = interviewParams;
+        const { type, difficulty, experience, techStack, noOfQuestions, questions, userId } = interviewParams;
+
+        if (!userId) {
+            return {
+                success: false,
+                interviewId: null,
+                message: "There was an error creating interview. Invalid userId!"
+            }
+        }
 
         const interviewRef = db.collection("interviews").doc();
         const interviewId = interviewRef.id;
 
         await interviewRef.set({
+            userId,
             type,
             difficulty,
             experience,
@@ -83,3 +97,30 @@ export async function getAllInterviews() {
     }
 }
 
+export async function getInterviewById(id) {
+    if (!id) {
+        return {
+            success: false,
+            interview: null,
+            message: "The Interview Id is null"
+        }
+    }
+
+    try {
+        const interview = await db.collection("interviewa").doc(id).get();
+        console.log(interview.data());
+
+        return {
+            success: true,
+            interview: interview,
+            message: "The interview is fetched"
+        }
+    } catch (e) {
+        console.log("There was an error fetching interview with id: ", id, e);
+        return {
+            success: false,
+            message: `There was an error fetching interview with id: ${id}`,
+            interview: null
+        }
+    }
+}
