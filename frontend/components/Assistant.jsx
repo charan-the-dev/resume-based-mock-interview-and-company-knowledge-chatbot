@@ -1,6 +1,19 @@
+<<<<<<< HEAD
 export default function Assistant({ name, isSpeaking }) {
     return (
         <div className="w-full h-full p-8 bg-white/5 flex flex-col gap-10 items-center justify-center">
+=======
+"use client";
+
+import { useState } from "react";
+
+export default function Assistant() {
+    const assistantName = "MILO";
+    const [isPaused, setPaused] = useState(true);
+
+    return (
+        <div className="w-1/3 p-8 bg-white/5 flex flex-col gap-10 items-center justify-center">
+>>>>>>> ccc0590 (add changes to chat components)
             <div className="italic text-neutral-400"><em className="font-bold text-neutral-200">Note:</em> As an AI voice assistant, I am currently at the development stage so, I would request you that I would complete my sentence first then I will pause and listen to your reply. Please bare with me!</div>
             <div className={`${isSpeaking ? "voice-assistant" : "voice-assistant.pause"} w-40 h-40 rounded-full bg-gray-600 flex items-center justify-center text-white font-medium`}>
                 <svg width="52.8" height="52.8" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
