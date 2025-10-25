@@ -51,11 +51,6 @@ const LoginPage = () => {
 				setMessage({text: res.message, type: "success"});
 			}
 
-			if (!(await getCurrentUser()).username) {
-				router.push("/details");
-				return;
-			}
-
 			router.push("/dashboard");
 		} catch (e) {
 			setLoading(false);
