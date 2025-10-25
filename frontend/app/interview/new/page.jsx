@@ -5,6 +5,7 @@ import Toast from "@/components/Toast";
 import { generateQuestions } from "@/lib/actions/llm";
 import { createInterview } from "@/lib/actions/interview.action";
 import { useRouter } from "next/navigation";
+import { getCurrentUser } from "@/lib/actions/auth.action";
 
 const MIN_QUESTIONS = 2;
 
@@ -55,6 +56,7 @@ export default function InterviewForm() {
         }
 
         const interviewFormData = {
+            userId: (await getCurrentUser()).id || null,
             difficulty,
             type,
             experience,
@@ -91,7 +93,7 @@ export default function InterviewForm() {
         <>
             <form
                 onSubmit={handleSubmit}
-                className="max-w-lg mx-auto p-6 rounded-2xl shadow-xl space-y-6"
+                className="max-w-lg shadow-2xl mt-5 bg-white/10 mx-auto p-6 rounded-2xl space-y-6"
             >
                 <h2 className="text-2xl font-semibold text-center">Interview Details</h2>
 
@@ -157,7 +159,7 @@ export default function InterviewForm() {
                         <button
                             type="button"
                             onClick={handleAddTech}
-                            className="px-4 py-2 rounded-lg bg-blue-200 hover:bg-blue-400 cursor-pointer"
+                            className="px-4 py-2 rounded-lg bg-orange-400/40 hover:bg-orange-700/40 cursor-pointer"
                         >
                             Add
                         </button>
@@ -167,7 +169,7 @@ export default function InterviewForm() {
                         {techStack.map((tech) => (
                             <div
                                 key={tech}
-                                className="flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-700 text-sm"
+                                className="flex items-center gap-2 px-3 py-1 rounded-full bg-black text-sm"
                             >
                                 <span>{tech}</span>
                                 <button
@@ -189,7 +191,7 @@ export default function InterviewForm() {
                         placeholder={`Minimum ${MIN_QUESTIONS}`}
                         value={noOfQuestions}
                         onChange={(e) => setNoOfQuestions(e.target.value)}
-                        className="w-full p-2 rounded-lg border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 
+                        className="w-full p-2 rounded-lg border border-neutral-700 focus:outline-none focus:ring-2 
                             appearance-none
                             [&::-webkit-inner-spin-button]:appearance-none
                             [&::-webkit-outer-spin-button]:appearance-none"
@@ -200,7 +202,7 @@ export default function InterviewForm() {
 
                 <button
                     type="submit"
-                    className="w-full py-2 rounded-lg bg-sky-300 hover:bg-sky-500 font-semibold disabled:bg-pink-300"
+                    className="w-full py-2 rounded-lg bg-black/60 hover:bg-black disabled:bg-pink-300 transition-colors duration-500 cursor-pointer"
                     disabled={loading}
                 >
                     {
