@@ -1,6 +1,6 @@
-import InterviewButton from "@/components/InterviewButton";
-import Interviews from "@/components/ui/interview/Interviews";
-import ResumeButton from "@/components/ResumeButton";
+import InterviewButton from "@/components/interview/InterviewButton";
+import Interviews from "@/components/interview/Interviews";
+import ResumeButton from "@/components/resume/ResumeButton";
 
 export default function page() {
 
