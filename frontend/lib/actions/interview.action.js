@@ -40,6 +40,11 @@ export async function createInterview(interviewParams) {
         const interviewRef = db.collection("interviews").doc();
         const interviewId = interviewRef.id;
 
+        const newQuestions = questions.map(q => {
+            const randomId = crypto.randomUUID();
+            return {...q, id: randomId};
+        })
+
         await interviewRef.set({
             userId,
             type,
@@ -47,7 +52,7 @@ export async function createInterview(interviewParams) {
             experience,
             techStack,
             noOfQuestions,
-            questions,
+            questions: newQuestions,
             createdAt: new Date()
         });
 
@@ -121,6 +126,35 @@ export async function getInterviewById(id) {
             success: false,
             message: `There was an error fetching interview with id: ${id}`,
             interview: null
+        }
+    }
+}
+
+
+export async function getQuestions(interviewId) {
+    if (!interviewId) {
+        return {
+            ok: false,
+            questions: null,
+            message: "Invalid Interview ID"
+        }
+    }
+
+    try {
+        const interview = await db.collection("interviews").doc(interviewId).get();
+        if (interview.exists && interview.data().questions) {
+            return {
+                ok: true,
+                questions: interview.data().questions,
+                message: "Questions are successfully fetched"
+            }
+        }
+    } catch (e) {
+        console.log("There was an error fetching the question with id: ", id, e);
+        return {
+            ok: false,
+            message: `There was an error fetching the question with id: ${id}`,
+            questions: null
         }
     }
 }

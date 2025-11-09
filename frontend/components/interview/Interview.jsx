@@ -11,7 +11,7 @@ const Interview = ({ interviewParams }) => {
     
     return (
         <div
-            className="p-5 border"
+            className="p-5"
             style={{ background: `hsl(${generateRandomHue()},50%,50%,.2)` }}
             onClick={() => router.push(`/interview/studio/${id}`)}
         >

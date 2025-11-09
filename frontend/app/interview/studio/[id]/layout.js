@@ -12,8 +12,8 @@ export default async function layout({ children, params }) {
 
     return (
         <>
-            <ChatLayout />;
-            {children}
+            {/* {children} */}
+            <ChatLayout interviewId={id} />
         </>
     )
 }

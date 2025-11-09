@@ -4,21 +4,17 @@ import { useState } from "react";
 import MessageBubble from "./MessageBubble";
 import MessageInput from "./MessageInput";
 
-export default function ChatArea({ messages }) {
-    // const [messages, setMessages] = useState([{
-    //     id: 1,
-    //     sender: "user",
-    //     text: "hai"
-    // }]);
+export default function ChatArea() {
+    const [messages, setMessages] = useState();
 
-    // function updateMessages(message) {
-    //     setMessages(prev => [...prev, message]);
-    // }
+    function updateMessages(message) {
+        setMessages(prev => [...prev, message]);
+    }
 
     return (
-        <section className="w-full h-full flex flex-col relative">
+        <section className="w-full h-full flex flex-col pt-3 bg-white/5 rounded-xl relative">
             {
-                messages.length > 0
+                messages && messages.length > 0
                     ? <div className="px-7 p-3 pb-15 overflow-y-auto custom-scrollbar">
                         {messages.map((message, i) => (
                             <MessageBubble key={i} message={message} />

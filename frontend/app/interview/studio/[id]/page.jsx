@@ -1,8 +1,9 @@
-import { getInterviewById } from '@/lib/actions/interview.action';
+import InterviewIntro from "@/components/interview/InterviewIntro";
 
 const page = () => {
     return (
         <>
+            <InterviewIntro />
         </>
     )
 };
