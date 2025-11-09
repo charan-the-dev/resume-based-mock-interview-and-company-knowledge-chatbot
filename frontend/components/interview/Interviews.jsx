@@ -24,7 +24,7 @@ const Interviews = () => {
         <>
             {
                 interviews
-                    ? <div className="border grid gap-2 p-2 px-10 items-center justify-center grid-cols-3">
+                    ? <div className="grid gap-2 p-2 px-10 items-center justify-center grid-cols-3">
                         {interviews.map(interview => (
                             <div key={interview.id}>
                                 <Interview interviewParams={interview} key={interview.id} />

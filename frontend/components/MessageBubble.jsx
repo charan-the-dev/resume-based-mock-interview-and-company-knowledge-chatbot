@@ -8,7 +8,7 @@ export default function MessageBubble({ message }) {
         <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
             {isUser ?
                 <>
-                    <div className={`max-w-lg rounded-xl ${isUser ? 'bg-neutral-200/75 text-black' : 'bg-neutral-800/70 text-neutral-200'}`}>
+                    <div className={`p-2 max-w-lg rounded-xl ${isUser ? 'bg-neutral-200/75 text-black' : 'bg-neutral-800/70 text-neutral-200'}`}>
                         <div>{message.content || "Some Message"}</div>
                     </div>
                     <div className="p-2 relative -top-3 bg-neutral-700 h-min rounded-full">
