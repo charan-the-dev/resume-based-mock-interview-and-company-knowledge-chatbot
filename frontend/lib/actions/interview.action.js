@@ -42,7 +42,7 @@ export async function createInterview(interviewParams) {
 
         const newQuestions = questions.map(q => {
             const randomId = crypto.randomUUID();
-            return {...q, id: randomId};
+            return { ...q, id: randomId };
         })
 
         await interviewRef.set({
@@ -150,10 +150,46 @@ export async function getQuestions(interviewId) {
             }
         }
     } catch (e) {
-        console.log("There was an error fetching the question with id: ", id, e);
+        console.log("There was an error fetching the question with id: ", interviewId, e);
         return {
             ok: false,
-            message: `There was an error fetching the question with id: ${id}`,
+            message: `There was an error fetching the question with id: ${interviewId}`,
+            questions: null
+        }
+    }
+}
+
+
+export async function saveAnswer(interviewId, answers) {
+    if (!interviewId)
+        return {
+            ok: false,
+            questions: null,
+            message: "Invalid Interview ID"
+        }
+
+    try {
+        const interviewRef = db.collection("interviews").doc(interviewId);
+        const interviewSnap = await interviewRef.get();
+
+        if (!interviewSnap.exists) {
+            return {
+                ok: false,
+                message: `Interview with ID ${interviewId} not found`
+            };
+        }
+
+        await interviewRef.update({ answers });
+
+        return {
+            ok: true,
+            message: "Answers saved successfully"
+        };
+    } catch (e) {
+        console.log("There was an error saving the answers with id: ", interviewId, e);
+        return {
+            ok: false,
+            message: `There was an error saving the answers with id: ${id}`,
             questions: null
         }
     }
