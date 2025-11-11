@@ -111,7 +111,7 @@ export default function InterviewForm() {
                     >
                         <option value="">Select Difficulty</option>
                         {["easy", "intermediate", "pro", "mixed"].map((d) => (
-                            <option key={d} value={d}>
+                            <option className="opacity-15" key={d} value={d}>
                                 {d.charAt(0).toUpperCase() + d.slice(1)}
                             </option>
                         ))}
@@ -124,7 +124,7 @@ export default function InterviewForm() {
                     <select
                         value={type}
                         onChange={(e) => setType(e.target.value)}
-                        className="w-full p-2 border-b-2 border-neutral-500/20 focus:outline-none"
+                        className="w-full p-2 border-b-2 border-neutral-500/20 placeholder:text-neutral-400 focus:outline-none"
                     >
                         <option value="">Select Type</option>
                         {["technical", "behavioral", "both"].map((t) => (
@@ -143,7 +143,7 @@ export default function InterviewForm() {
                         placeholder="e.g., 2 years, Fresher, Senior Developer..."
                         value={experience}
                         onChange={(e) => setExperience(e.target.value)}
-                        className="w-full p-2 border-b-2 border-neutral-500/20 focus:outline-none"
+                        className="w-full p-2 border-b-2 border-neutral-500/20 placeholder:text-neutral-400 focus:outline-none"
                     />
                 </div>
 
@@ -162,7 +162,7 @@ export default function InterviewForm() {
                                     handleAddTech();
                                 }
                             }}
-                            className="flex-1 p-2 border-b-2 border-neutral-500/20 focus:outline-none"
+                            className="flex-1 p-2 border-b-2 border-neutral-500/20 placeholder:text-neutral-400 focus:outline-none"
                         />
                         <button
                             type="button"
@@ -200,32 +200,29 @@ export default function InterviewForm() {
                         placeholder={`Minimum ${MIN_QUESTIONS}`}
                         value={noOfQuestions}
                         onChange={(e) => setNoOfQuestions(e.target.value)}
-                        className="w-full p-2 border-b-2 border-neutral-500/20 focus:outline-none appearance-none
-              [&::-webkit-inner-spin-button]:appearance-none
-              [&::-webkit-outer-spin-button]:appearance-none"
+                        className="w-full p-2 border-b-2 border-neutral-500/20 placeholder:text-neutral-400 focus:outline-none focus:ring-2 
+                            appearance-none
+                            [&::-webkit-inner-spin-button]:appearance-none
+                            [&::-webkit-outer-spin-button]:appearance-none"
                     />
                 </div>
 
-                {/* Toast */}
-                {message.text && (
-                    <Toast type={message.type} message={message.text} setMessage={setMessage} />
-                )}
+                <Toast type={message.type} message={message.text} setMessage={setMessage} />
 
-                {/* Buttons */}
                 <div className="flex gap-4">
                     <button
-                        type="button"
-                        className="w-full py-2 rounded-lg bg-black/60 hover:bg-black transition-colors duration-500 disabled:opacity-50"
+                        type="submit"
+                        className="w-full py-2 rounded-lg bg-black/60 hover:bg-black disabled:bg-black transition-colors duration-500 cursor-pointer"
                         disabled={loading}
-                        onClick={(e) => handleClick(e)}
+                        onClick={(e) => handleClick(e, false)}
                     >
                         Take later
                     </button>
                     <button
-                        type="button"
-                        className="w-full py-2 rounded-lg bg-black/60 hover:bg-black transition-colors duration-500 disabled:opacity-50"
+                        type="submit"
+                        className="w-full py-2 rounded-lg bg-black/60 hover:bg-black disabled:bg-black transition-colors duration-500 cursor-pointer"
                         disabled={loading}
-                        onClick={(e) => handleClick(e)}
+                        onClick={(e) => handleClick(e, true)}
                     >
                         Take now
                     </button>

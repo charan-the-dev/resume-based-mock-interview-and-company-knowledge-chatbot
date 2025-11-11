@@ -11,8 +11,6 @@ import InterviewIntro from "@/components/interview/InterviewIntro";
 const Page = () => {
     const { id } = useParams();
 
-    const router = useRouter();
-
     const [questions, setQuestions] = useState([]);
     const [question, setQuestion] = useState({});
     const [answers, setAnswers] = useState([]);
