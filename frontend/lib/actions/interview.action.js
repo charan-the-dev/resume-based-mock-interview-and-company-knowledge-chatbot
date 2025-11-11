@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/firebase/admin";
+import { analyzeAnswers, generateQuestions } from "./llm";
 
 export async function doesInterviewExist(id) {
     if (!id) {
@@ -40,6 +41,11 @@ export async function createInterview(interviewParams) {
         const interviewRef = db.collection("interviews").doc();
         const interviewId = interviewRef.id;
 
+        const newQuestions = questions.map(q => {
+            const randomId = crypto.randomUUID();
+            return { ...q, id: randomId };
+        })
+
         await interviewRef.set({
             userId,
             type,
@@ -47,7 +53,7 @@ export async function createInterview(interviewParams) {
             experience,
             techStack,
             noOfQuestions,
-            questions,
+            questions: newQuestions,
             createdAt: new Date()
         });
 
@@ -122,5 +128,145 @@ export async function getInterviewById(id) {
             message: `There was an error fetching interview with id: ${id}`,
             interview: null
         }
+    }
+}
+
+
+export async function getQuestions(interviewId) {
+    if (!interviewId) {
+        return {
+            ok: false,
+            questions: null,
+            message: "Invalid Interview ID"
+        }
+    }
+
+    try {
+        const interview = await db.collection("interviews").doc(interviewId).get();
+        if (interview.exists && interview.data().questions) {
+            return {
+                ok: true,
+                questions: interview.data().questions,
+                message: "Questions are successfully fetched"
+            }
+        }
+    } catch (e) {
+        console.log("There was an error fetching the question with id: ", interviewId, e);
+        return {
+            ok: false,
+            message: `There was an error fetching the question with id: ${interviewId}`,
+            questions: null
+        }
+    }
+}
+
+async function analyzeAndStore(interviewId) {
+    try {
+        // Fetch interview data
+        const interviewDoc = await db.collection("interviews").doc(interviewId).get();
+        if (!interviewDoc.exists) {
+            throw new Error(`Interview with ID ${interviewId} not found`);
+        }
+
+        const interviewData = interviewDoc.data();
+
+        // Analyze answers
+        const analysis = await analyzeAnswers(interviewData);
+
+        // Generate a unique analysis ID
+        const analysisId = interviewId;
+
+        // Store the analysis in the backend (e.g., under "analyses" collection)
+        await db.collection("analysis").doc(analysisId).set({
+            id: analysisId,
+            interviewId,
+            createdAt: new Date().toISOString(),
+            analysis,
+        });
+
+        console.log("Analysis stored successfully:", analysisId);
+        return { ok: true, analysisId };
+    } catch (error) {
+        console.error("❌ Error analyzing or storing interview:", error);
+        return { ok: false, error: error.message };
+    }
+}
+
+
+export async function saveAnswers(interviewId, answers) {
+    if (answers.length === 0) {
+        return {
+            ok: true,
+            message: "Interview saved with empty",
+        }
+    }
+
+    if (!interviewId)
+        return {
+            ok: false,
+            message: "Invalid Interview ID"
+        }
+
+    try {
+        const interviewRef = db.collection("interviews").doc(interviewId);
+        const interviewSnap = await interviewRef.get();
+
+        if (!interviewSnap.exists) {
+            return {
+                ok: false,
+                message: `Interview with ID ${interviewId} not found`
+            };
+        }
+
+        await interviewRef.update({ answers });
+        analyzeAndStore(interviewId);
+
+        return {
+            ok: true,
+            message: "Answers saved successfully"
+        };
+    } catch (e) {
+        console.log("There was an error saving the answers with id: ", interviewId, e);
+        return {
+            ok: false,
+            message: `There was an error saving the answers with id: ${id}`,
+            questions: null
+        }
+    }
+}
+
+export async function getAnalysis(analysisId) {
+    if (!analysisId) {
+        return {
+            ok: false,
+            message: "Invalid Interview ID",
+            analysis: null
+        };
+    }
+
+    try {
+        const analysis = await db.collection("analysis").doc(analysisId).get();
+
+
+        if (!analysis.exists) {
+            return {
+                ok: false,
+                message: `No analysis found for interview ID: ${analysisId}`,
+                analysis: null
+            };
+        }
+
+        return {
+            ok: true,
+            message: "Analysis fetched successfully",
+            analysis: analysis.data()
+        };
+    } catch (e) {
+        console.error("Error fetching analysis for interview ID:", analysisId, e);
+        return {
+            ok: false,
+            message: `There was an error fetching the analysis for interview ID: ${analysisId}`,
+            analysis: null
+        };
     }
 }

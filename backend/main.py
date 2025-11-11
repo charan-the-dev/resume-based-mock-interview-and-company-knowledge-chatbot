@@ -25,7 +25,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 @app.get("/")
 async def root():
     return {
@@ -183,12 +182,10 @@ async def analyze_resume(file: UploadFile = File(...)) -> Dict:
         print("Step 2: Calculating hard score...")
         hard_score = calculate_hard_score(parsed_data)
         print(f"✓ Hard score: {hard_score.get('total_score', 0)}/100")
-
         # Step 3: Calculate soft score (qualitative)
         print("Step 3: Calculating soft score...")
         soft_score = calculate_soft_score(parsed_data)
         print(f"✓ Soft score: {soft_score.get('total_score', 0)}/100")
-
         # Step 4: Get AI suggestions
         print("Step 4: Getting AI suggestions...")
         llm_suggestions = await get_llm_suggestions(parsed_data, hard_score, soft_score)

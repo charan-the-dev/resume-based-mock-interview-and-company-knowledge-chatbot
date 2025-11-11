@@ -1,41 +1,56 @@
 "use client";
 
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState, useEffect } from "react";
 
-export default function MessageInput({ onSend }) {
+export default function MessageInput({ questionFormat, initialValue = "", onSubmit }) {
+    const [message, setMessage] = useState(initialValue);
 
-    const [message, setMessage] = useState("");
+    useEffect(() => {
+        setMessage(initialValue);
+    }, [initialValue]);
 
-    function handleSend(e) {
+    const isTextFormat = questionFormat === "text";
+
+    const handleSend = (e) => {
         e.preventDefault();
-        const newMessage = {
-            id: crypto.randomUUID(),
-            text: message,
-            sender: "user",
-            timestamp: new Date().toISOString()
+        if (typeof onSubmit === "function") {
+            onSubmit(message);
         }
         setMessage("");
-
-        onSend(newMessage);
-    }
-
+    };
 
     return (
-        <form onSubmit={(e) => handleSend(e)} className="relative flex gap-5 justify-center items-center w-3/4 m-auto bg-neutral-200/75 rounded-full pr-2 text-gray-800 placeholder-gray-700 ouline-none">
-            <input
-                className="w-full p-2 px-5 outline-none"
-                type="text"
+        <form
+            onSubmit={handleSend}
+            className="relative flex gap-5 justify-center items-center w-3/4 m-auto"
+        >
+            <textarea
+                className={`max-w-4xl bg-white/20 backdrop-blur-md text-gray-900 placeholder-gray-600 
+                    dark:bg-white/10 dark:text-gray-100 dark:placeholder-gray-400 
+                    rounded-2xl px-4 py-3 resize-none outline-none border border-transparent 
+                    transition-all duration-1000 shadow-sm 
+                    scrollbar-thin scrollbar-thumb-gray-400/40 scrollbar-track-transparent 
+                    hover:scrollbar-thumb-gray-400/60 disabled:opacity-40
+                    ${isTextFormat ? "h-32 w-full" : "w-xs h-14 p-0"}`}
+                style={{
+                    scrollbarWidth: "thin",
+                    scrollbarColor: "rgba(156,163,175,0.4) transparent",
+                }}
+                disabled={!isTextFormat}
+                rows={3}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Type your answer..."
+                placeholder={isTextFormat ? "Type your answer..." : "Select the Correct option(s)"}
             />
             <button
-                className="cursor-pointer p-2 text-gray-800 hover:text-gray-900 transition-colors"
                 type="submit"
+                className="py-2 px-5 bg-black/60 text-white cursor-pointer hover:bg-black disabled:opacity-30 transition-all rounded-xl duration-500 flex items-center gap-2"
+                disabled={!isTextFormat}
             >
                 <FontAwesomeIcon icon={faPaperPlane} />
+                Save
             </button>
         </form>
     );
