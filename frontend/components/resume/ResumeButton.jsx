@@ -1,12 +1,22 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 const ResumeButton = () => {
+    const router = useRouter();
+
     return (
-        <button
-            className='py-2 px-5 rounded bg-indigo-400/40 border-2 border-blue-200 cursor-pointer'
-            type="button"
-        >
-            Upload Resume for Analysis
-        </button>
+        <Link href="/resume-upload">
+            <button
+                className="py-3 px-6 rounded-xl bg-black/60 border border-emerald-300 shadow-md hover:shadow-lg transition text-sm md:text-base"
+                type="button"
+                onClick={() => router.push("/resume-upload")}
+            >
+                <span className="text-emerald-100">Upload Resume for Analysis</span>
+            </button>
+        </Link>
     );
 };
 
-export default ResumeButton
+export default ResumeButton;
