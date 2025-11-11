@@ -2,8 +2,8 @@
 
 import Question from "@/components/Question";
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
-import { getQuestions, saveAnswer } from "@/lib/actions/interview.action";
+import { useParams, useRouter } from "next/navigation";
+import { getQuestions, saveAnswers } from "@/lib/actions/interview.action";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import InterviewIntro from "@/components/interview/InterviewIntro";
@@ -62,7 +62,7 @@ const Page = () => {
 
     async function handleSubmit() {
         console.log(answers);
-        const res = await saveAnswer(id, answers);
+        const res = await saveAnswers(id, answers);
         if (res.ok) {
             console.log("Answers saved! Redirecting to Dashboard!");
         } else {
@@ -70,9 +70,19 @@ const Page = () => {
         }
     }
 
+    function handleEndClick() {
+        if (answers.length < questions.length) {
+            alert("Are you sure you want to exit?");
+            router.push("/dashboard");
+            return;
+        }
+
+        saveAnswers(id, []);
+    }
+
     return (
         <>
-        <InterviewIntro />
+            <InterviewIntro />
             <main className="max-w-5xl h-screen m-auto flex flex-col items-center py-10 relative">
                 {/* Prev Button */}
                 {index > 0 && (
@@ -114,7 +124,7 @@ const Page = () => {
                 )}
 
             </main>
-            <button className="absolute top-5 right-5 py-2 px-5 bg-black/70 hover:bg-black cursor-pointer rounded-lg text-white">
+            <button onClick={handleEndClick} className="absolute top-5 right-5 py-2 px-5 bg-black/70 hover:bg-black cursor-pointer rounded-lg text-white">
                 End Interview
             </button>
         </>
