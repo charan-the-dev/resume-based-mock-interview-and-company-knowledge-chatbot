@@ -3,7 +3,7 @@ import React from "react";
 export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6"
-      style={{ backgroundColor: "#163832", color: "#fff" }}
+      style={{ backgroundColor: "#163832", color: "#fff                                                                                                                                                                                                                                                                                           " }}
     >
       <header className="text-center mb-12">
         <h1 className="text-4xl font-bold">AI Mock Interview & Resume Analysis</h1>
