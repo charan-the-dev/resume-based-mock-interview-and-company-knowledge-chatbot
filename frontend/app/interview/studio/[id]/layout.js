@@ -1,4 +1,3 @@
-import ChatLayout from '@/components/ChatLayout';
 import { doesInterviewExist } from '@/lib/actions/interview.action'
 
 export default async function layout({ children, params }) {
@@ -12,8 +11,7 @@ export default async function layout({ children, params }) {
 
     return (
         <>
-            {/* {children} */}
-            <ChatLayout interviewId={id} />
+            {children}
         </>
     )
 }
