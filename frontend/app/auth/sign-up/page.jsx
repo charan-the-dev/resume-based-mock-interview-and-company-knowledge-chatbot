@@ -74,6 +74,7 @@ const Signup = () => {
         onSubmit={handleSubmit}
         method="POST"
       >
+        <div className="text-2xl">Sign Up</div>
         <input
           className="p-2 border-b-2 border-neutral-500 focus-visible:border-neutral-300 outline-none"
           type="email"
@@ -93,7 +94,7 @@ const Signup = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        
+
         <button
           className="bg-black/50 p-2 px-5 mt-10 rounded-lg text-white cursor-pointer hover:text-black hover:bg-white/60 transition-colors duration-700"
           type="submit"

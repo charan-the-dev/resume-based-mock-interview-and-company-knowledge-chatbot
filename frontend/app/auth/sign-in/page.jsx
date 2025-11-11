@@ -73,6 +73,9 @@ const LoginPage = () => {
 				onSubmit={handleSubmit}
 				method="POST"
 			>
+				<div className="text-2xl">
+					Sign In
+				</div>
 				<input
 					className="p-2 border-b-2 border-neutral-500 focus-visible:border-neutral-300 outline-none"
 					type="email"

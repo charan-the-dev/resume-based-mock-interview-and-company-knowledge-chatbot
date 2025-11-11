@@ -1,4 +1,4 @@
-export function evaluateInterviewResponsePrompt(interviewParams, questions, userResponses) {
+export function evaluateInterviewResponsePrompt(interviewParams, questions, answers) {
     const { type, difficulty, experience, techStack } = interviewParams;
 
     // Ensure questions and userResponses are valid JSON before calling this function.
@@ -18,7 +18,7 @@ export function evaluateInterviewResponsePrompt(interviewParams, questions, user
             ${JSON.stringify(questions)}
 
             2) USER RESPONSES JSON:
-            ${JSON.stringify(userResponses)}
+            ${JSON.stringify(answers)}
 
             --- 
             TASK
@@ -39,14 +39,14 @@ export function evaluateInterviewResponsePrompt(interviewParams, questions, user
 
             Each object MUST follow this schema exactly:
             [
-            {
-                "question": "string — same as input question",
-                "answer": "string | array — the user's answer (as provided)",
-                "evaluation": "string — concise analysis (max 2-3 sentences)",
-                "score": number,         // 0 to 10, decimal allowed
-                "feedback": "string — constructive suggestion or comment",
-                "relatedSkill": "string — same as question.relatedSkill"
-            }
+                {
+                    "question": "string — same as input question",
+                    "answer": "string | array — the user's answer (as provided)",
+                    "evaluation": "string — concise analysis (max 2-3 sentences)",
+                    "score": number,         // 0 to 10, decimal allowed
+                    "feedback": "string — constructive suggestion or comment",
+                    "relatedSkill": "string — same as question.relatedSkill"
+                }
             ]
 
             SCORING GUIDELINES
